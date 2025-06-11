@@ -4,6 +4,8 @@
 int main() {
 	
 	float dt;
+
+
 	while (Game::instance()->isPlaying()) {
 
 		dt = Game::instance()->m_clock.restart().asSeconds();

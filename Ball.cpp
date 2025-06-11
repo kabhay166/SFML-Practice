@@ -1,9 +1,9 @@
 #include "Ball.h"
 #include "Game.h"
-
+#include <iostream>
 
 Ball::Ball () {
-
+	
 }
 
 Ball::Ball(float radius, sf::Color color, sf::Vector2f position,sf::Vector2f veclocity) {
@@ -24,8 +24,8 @@ void Ball::update(float dt) {
 	
 	///////// update the position vector //////////////
 
-		m_position.x += m_velocity.x * dt;
-		m_position.y += m_velocity.y * dt;
+		m_position.x += m_velocity.x * dt / (m_slowFactor);
+		m_position.y += m_velocity.y * dt / (m_slowFactor);
 	
 	//////////////////////////////////////////////////
 
@@ -35,7 +35,7 @@ void Ball::update(float dt) {
 			m_velocity.x *= -1;	
 		}*/
 
-		if (m_position.y < m_radius || m_position.y + m_radius > Game::m_HEIGHT) {
+		if (m_position.y < Game::startY +  m_radius || m_position.y + m_radius > Game::m_HEIGHT) {
 			m_velocity.y *= -1;
 		}
 
@@ -84,6 +84,13 @@ void Ball::update(float dt) {
 
 	//m_collided = false;
 
+	if (m_slowFactor > 1) {
+		m_slowFactor -= 2.5*dt;
+	}
+
+	if (m_slowFactor < 1) {
+		m_slowFactor = 1;
+	}
 
 }
 
@@ -114,4 +121,38 @@ void Ball::setColor(sf::Color color) {
 
 void Ball::setCollided(bool collided) {
 	m_collided = collided;
+}
+
+sf::Color Ball::getColor() const {
+	return m_shape.getFillColor();
+}
+
+void Ball::setSlow() {
+	std::cout << "Slowing the ball\n";
+	m_slowFactor = 5;
+}
+
+
+bool Ball::getHitPlayer1() {
+	return m_HitPlayer1;
+}
+
+bool Ball::getHitPlayer2() {
+	return m_HitPlayer2;
+}
+
+void Ball::setHitPlayer1(bool hitPlayer1) {
+	m_HitPlayer1 = hitPlayer1;
+}
+
+void Ball::setHitPlayer2(bool hitPlayer2) {
+	m_HitPlayer2 = hitPlayer2;
+}
+
+void Ball::setRadius(float radius) {
+	m_shape.setRadius(radius);
+}
+
+void Ball::setPosition(sf::Vector2f position) {
+	m_position = position;
 }
